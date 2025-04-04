@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import UserContext from './UserContext';
 
 function Login() {
   const [form, setForm] = useState({ username: '', password: '' });
+  const navigate = useNavigate();
+  const { setUsername } = useContext(UserContext);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -9,14 +13,19 @@ function Login() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert(`Logged in with\nUsername: ${form.username}`);
+    if (form.username && form.password) {
+      setUsername(form.username); // Save username globally
+      navigate('/home');
+    } else {
+      alert('Please enter both username and password.');
+    }
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <h2>Login</h2>
       <input
-        type="username"
+        type="text"
         name="username"
         placeholder="Username"
         value={form.username}
